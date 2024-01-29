@@ -32,13 +32,13 @@ pipeline {
          }
        }
      }
-    //  post {
-    //      success {
-    //          archiveArtifacts artifacts: 'terraform/eks-cluster-ec2/tfplan', onlyIfSuccessful: true
-    //      }
-    // }
+     post {
+         success {
+             archiveArtifacts artifacts: 'terraform/eks-cluster-ec2/tfplan', onlyIfSuccessful: true
+         }
+    }
 
-    // }
+    }
 
     // stage('approval') {
     //         steps {
@@ -168,7 +168,7 @@ pipeline {
   //     }
   //       }
   //     }
-  //   }
+    // }
   
     stage('approve destroy for terraform') {
             steps {
