@@ -111,7 +111,6 @@ pipeline {
   //    }
 
 
-<<<<<<< HEAD
   //   stage('Build and Push Docker Image') {
   //     environment {
   //       awsAccountId = '389029577690'
@@ -124,20 +123,6 @@ pipeline {
   //       script {
   //           // Build the Docker image
   //           sh "cd spring-boot-app && docker build -t ${repositoryName}:${dockerImageTag} ."
-=======
-    stage('Build and Push Docker Image') {
-      environment {
-        awsAccountId = '596035185695'
-        region = 'us-east-1'
-        repositoryName = 'jjtech-demo'
-        dockerImageTag = "${BUILD_NUMBER}"
-        ecrRegistry = "${awsAccountId}.dkr.ecr.${region}.amazonaws.com"
-      }
-      steps {
-        script {
-            // Build the Docker image
-            sh "cd spring-boot-app && docker build -t ${repositoryName}:${dockerImageTag} ."
->>>>>>> 17dbfe239c0ae9b9c400e406d926e21be9047533
 
   //           // Authenticate and push the Docker image to ECR
   //               sh "aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${ecrRegistry}"
