@@ -20,83 +20,83 @@ pipeline {
       }
     }
 
-    stage('create eks cluster') {
-     steps {
-       script{
-         dir ('terraform/eks-cluster-ec2') {
-           sh 'terraform init'
-           sh 'terraform fmt'
-           sh 'terraform validate'
-           sh 'terraform plan -out=tfplan'
-           stash includes: 'tfplan', name: 'terraform-plan'
-         }
-       }
-     }
-     post {
-         success {
-             archiveArtifacts artifacts: 'terraform/eks-cluster-ec2/tfplan', onlyIfSuccessful: true
-         }
-    }
+    // stage('create eks cluster') {
+    //  steps {
+    //    script{
+    //      dir ('terraform/eks-cluster-ec2') {
+    //        sh 'terraform init'
+    //        sh 'terraform fmt'
+    //        sh 'terraform validate'
+    //        sh 'terraform plan -out=tfplan'
+    //        stash includes: 'tfplan', name: 'terraform-plan'
+    //      }
+    //    }
+    //  }
+    //  post {
+    //      success {
+    //          archiveArtifacts artifacts: 'terraform/eks-cluster-ec2/tfplan', onlyIfSuccessful: true
+    //      }
+    // }
 
-    }
+    // }
 
-    stage('approval') {
-            steps {
-                input "Please review the Terraform plan and click 'Proceed' to apply it"
-            }
-        }
+    // stage('approval') {
+    //         steps {
+    //             input "Please review the Terraform plan and click 'Proceed' to apply it"
+    //         }
+    //     }
 
-    stage('apply') {
-        steps {
-          script{
-            dir ('terraform/eks-cluster-ec2') {
-            unstash 'terraform-plan'
-            sh 'terraform apply -auto-approve tfplan'
-            }
-        }
-    }
+    // stage('apply') {
+    //     steps {
+    //       script{
+    //         dir ('terraform/eks-cluster-ec2') {
+    //         unstash 'terraform-plan'
+    //         sh 'terraform apply -auto-approve tfplan'
+    //         }
+    //     }
+    // }
 
-    }
+    // }
 
-    stage('Build and Test') {
-      steps {
-        // sh 'ls -ltr'
-        // builds the project and create a JAR file
-        sh 'cd spring-boot-app && mvn -U clean package'
-      }
+    // stage('Build and Test') {
+    //   steps {
+    //     // sh 'ls -ltr'
+    //     // builds the project and create a JAR file
+    //     sh 'cd spring-boot-app && mvn -U clean package'
+    //   }
       
-    }
+    // }
     
-    stage('Unit Test') {
-         steps {
-             sh 'cd spring-boot-app && mvn test'
-         }
-       }
-    stage('Integration Test') {
-        steps {
-            sh 'cd spring-boot-app && mvn verify -DskipUnitTests'
-        }
-    }
-    stage('Checkstyle Code Analysis') {
-        steps {
-            sh 'cd spring-boot-app && mvn checkstyle:checkstyle'
-        }
-        post {
-            success {
-                echo 'Generated Analysis Result'
-            }
-        }
-    }
-    stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://172.31.91.84:9000/"
-      }
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        }
-      }
-    }
+    // stage('Unit Test') {
+    //      steps {
+    //          sh 'cd spring-boot-app && mvn test'
+    //      }
+    //    }
+    // stage('Integration Test') {
+    //     steps {
+    //         sh 'cd spring-boot-app && mvn verify -DskipUnitTests'
+    //     }
+    // }
+    // stage('Checkstyle Code Analysis') {
+    //     steps {
+    //         sh 'cd spring-boot-app && mvn checkstyle:checkstyle'
+    //     }
+    //     post {
+    //         success {
+    //             echo 'Generated Analysis Result'
+    //         }
+    //     }
+    // }
+    // stage('Static Code Analysis') {
+    //   environment {
+    //     SONAR_URL = "http://172.31.91.84:9000/"
+    //   }
+    //   steps {
+    //     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_AUTH_TOKEN')]) {
+    //       sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+    //     }
+    //   }
+    // }
 
   //  stage('Upload artifact to Nexus') {
   //      steps {
